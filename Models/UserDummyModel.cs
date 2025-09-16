@@ -1,4 +1,4 @@
-namespace MyBackendApi.Models
+namespace be_learn_dotnet.Models
 {
     public class UserDummyModel
     {

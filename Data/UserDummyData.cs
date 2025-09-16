@@ -1,8 +1,8 @@
-using MyBackendApi.Models;
+using be_learn_dotnet.Models;
 
-namespace MyBackendApi.Data
+namespace be_learn_dotnet.Data
 {
-  public static class UserData
+  public static class UserDummyData
   {
     public static List<UserDummyModel> Users = new List<UserDummyModel>
     {

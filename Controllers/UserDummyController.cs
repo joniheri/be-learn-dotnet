@@ -1,34 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
-using MyBackendApi.Data;
-using MyBackendApi.Models;
+using be_learn_dotnet.Models;
+using be_learn_dotnet.Services;
 
-namespace MyBackendApi.Controllers
+namespace be_learn_dotnet.Controllers
 {
   [ApiController]
   [Route("users-dummy")]
-  public class UsersController : ControllerBase
+  public class UserDummyController : ControllerBase
   {
-    // GET /users
+    private readonly UserDummyService _userService;
+
+    // constructor pakai Dependency Injection
+    public UserDummyController(UserDummyService userService)
+    {
+      _userService = userService;
+    }
+
+    // GET /users-dummy
     [HttpGet]
     public IActionResult GetAll([FromQuery] int? page, [FromQuery] int? size)
     {
-      // default value
       int currentPage = page ?? 1;
       int pageSize = size ?? 10;
 
-      // total data
-      int totalData = UserData.Users.Count;
-      int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);
-
-      // ambil data sesuai page
-      var data = UserData.Users
-          .Skip((currentPage - 1) * pageSize)
-          .Take(pageSize)
-          .ToList();
-
-      // hitung from - to
-      int from = ((currentPage - 1) * pageSize) + 1;
-      int to = Math.Min(from + pageSize - 1, totalData);
+      var data = _userService.GetAll(currentPage, pageSize, out int totalData, out int totalPage, out int from, out int to);
 
       var response = new
       {
@@ -46,51 +41,41 @@ namespace MyBackendApi.Controllers
       return Ok(response);
     }
 
-    // GET /users/{id}
+    // GET /users-dummy/{id}
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-      var user = UserData.Users.FirstOrDefault(u => u.Id == id);
+      var user = _userService.GetById(id);
       if (user == null) return NotFound(new { message = "User not found" });
+
       return Ok(user);
     }
 
-    // POST /users
+    // POST /users-dummy
     [HttpPost]
     public IActionResult Create([FromBody] UserDummyModel newUser)
     {
-      if (UserData.Users.Any(u => u.Id == newUser.Id))
-      {
-        return BadRequest(new { message = "User with this ID already exists" });
-      }
-      UserData.Users.Add(newUser);
-      return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser);
+      var createdUser = _userService.Create(newUser);
+      return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
     }
 
-    // PATCH /users/{id}
+    // PATCH /users-dummy/{id}
     [HttpPatch("{id}")]
     public IActionResult Update(int id, [FromBody] UserDummyModel updatedUser)
     {
-      var user = UserData.Users.FirstOrDefault(u => u.Id == id);
+      var user = _userService.Update(id, updatedUser);
       if (user == null) return NotFound(new { message = "User not found" });
-
-      if (!string.IsNullOrEmpty(updatedUser.Name))
-        user.Name = updatedUser.Name;
-
-      if (!string.IsNullOrEmpty(updatedUser.Email))
-        user.Email = updatedUser.Email;
 
       return Ok(user);
     }
 
-    // DELETE /users/{id}
+    // DELETE /users-dummy/{id}
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      var user = UserData.Users.FirstOrDefault(u => u.Id == id);
-      if (user == null) return NotFound(new { message = "User not found" });
+      var deleted = _userService.Delete(id);
+      if (!deleted) return NotFound(new { message = "User not found" });
 
-      UserData.Users.Remove(user);
       return NoContent();
     }
   }
