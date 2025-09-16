@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using be_learn_dotnet.Models;
 using be_learn_dotnet.Services;
+using be_learn_dotnet.Helpers;
 
 namespace be_learn_dotnet.Controllers
 {
@@ -25,18 +26,16 @@ namespace be_learn_dotnet.Controllers
 
       var data = _userService.GetAll(currentPage, pageSize, out int totalData, out int totalPage, out int from, out int to);
 
-      var response = new
-      {
-        status = "success",
-        message = "get data success",
-        data,
-        page = currentPage,
-        size = pageSize,
-        from,
-        to,
-        currentPage,
-        totalPage
-      };
+      var response = ApiResponse.SuccessWithPagination(
+        message: "get data success",
+        data: data,
+        page: currentPage,
+        size: pageSize,
+        from: from,
+        to: to,
+        currentPage: currentPage,
+        totalPage: totalPage
+      );
 
       return Ok(response);
     }
@@ -46,9 +45,9 @@ namespace be_learn_dotnet.Controllers
     public IActionResult GetById(int id)
     {
       var user = _userService.GetById(id);
-      if (user == null) return NotFound(new { message = "User not found" });
+      if (user == null) return NotFound(ApiResponse.Error($"User with ID: {id} not found"));
 
-      return Ok(user);
+      return Ok(ApiResponse.Success("get user by id success", user));
     }
 
     // POST /users-dummy
@@ -56,7 +55,13 @@ namespace be_learn_dotnet.Controllers
     public IActionResult Create([FromBody] UserDummyModel newUser)
     {
       var createdUser = _userService.Create(newUser);
-      return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
+      if (createdUser == null) return BadRequest(ApiResponse.Error("failed to create user"));
+
+      return CreatedAtAction(
+        nameof(GetById),
+        new { id = createdUser.Id },
+        ApiResponse.Success("create user success", createdUser)
+      );
     }
 
     // PATCH /users-dummy/{id}
@@ -64,9 +69,9 @@ namespace be_learn_dotnet.Controllers
     public IActionResult Update(int id, [FromBody] UserDummyModel updatedUser)
     {
       var user = _userService.Update(id, updatedUser);
-      if (user == null) return NotFound(new { message = "User not found" });
+      if (user == null) return NotFound(ApiResponse.Error($"User with ID: {id} not found"));
 
-      return Ok(user);
+      return Ok(ApiResponse.Success("update user success", user));
     }
 
     // DELETE /users-dummy/{id}
@@ -76,7 +81,7 @@ namespace be_learn_dotnet.Controllers
       var deleted = _userService.Delete(id);
       if (!deleted) return NotFound(new { message = "User not found" });
 
-      return NoContent();
+      return Ok(ApiResponse.Success("delete user success"));
     }
   }
 }
