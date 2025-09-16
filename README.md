@@ -28,6 +28,18 @@ dotnet run
 dotnet watch run
 ```
 
+- Pastikan tidak ada proses .NET yang masih jalan
+
+```bash
+tasklist | findstr dotnet
+```
+
+- kill semua proses dotnet.exe
+
+```bash
+taskkill /F /IM dotnet.exe
+```
+
 - Tambah dependency (NuGet packages)
 
 ```bash
