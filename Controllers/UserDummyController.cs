@@ -10,9 +10,40 @@ namespace MyBackendApi.Controllers
   {
     // GET /users
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll([FromQuery] int? page, [FromQuery] int? size)
     {
-      return Ok(UserData.Users);
+      // default value
+      int currentPage = page ?? 1;
+      int pageSize = size ?? 10;
+
+      // total data
+      int totalData = UserData.Users.Count;
+      int totalPage = (int)Math.Ceiling(totalData / (double)pageSize);
+
+      // ambil data sesuai page
+      var data = UserData.Users
+          .Skip((currentPage - 1) * pageSize)
+          .Take(pageSize)
+          .ToList();
+
+      // hitung from - to
+      int from = ((currentPage - 1) * pageSize) + 1;
+      int to = Math.Min(from + pageSize - 1, totalData);
+
+      var response = new
+      {
+        status = "success",
+        message = "get data success",
+        data,
+        page = currentPage,
+        size = pageSize,
+        from,
+        to,
+        currentPage,
+        totalPage
+      };
+
+      return Ok(response);
     }
 
     // GET /users/{id}
