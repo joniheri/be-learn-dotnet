@@ -1,0 +1,47 @@
+## Build results
+bin/
+obj/
+out/
+[Ll]og/
+[Ll]ogs/
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Visual Studio
+.vs/
+
+## Rider
+.idea/
+
+## Mac / Linux
+.DS_Store
+*.swp
+
+## NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+
+## Dotnet tools
+.dotnet-tools/
+
+## Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+## Publish output
+publish/
+*.pubxml
+*.pubxml.user
+
+## Others
+*.tmp
+*.bak
+*.cache
