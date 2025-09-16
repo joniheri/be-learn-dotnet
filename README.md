@@ -43,8 +43,8 @@ taskkill /F /IM dotnet.exe
 - Tambah dependency (NuGet packages)
 
 ```bash
-dotnet add package Dapper
-dotnet add package MySqlConnector
+dotnet add package Dapper # ORM ringan, buat mapping query SQL ke object C#.
+dotnet add package MySqlConnector # driver MySQL .NET, supaya bisa connect ke database MySQL.
 dotnet add package StackExchange.Redis
 dotnet add package NLog.Web.AspNetCore
 dotnet add package Swashbuckle.AspNetCore
