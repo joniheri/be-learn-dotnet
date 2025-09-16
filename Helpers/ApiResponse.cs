@@ -13,6 +13,7 @@ namespace be_learn_dotnet.Helpers
     public int? To { get; set; }
     public int? CurrentPage { get; set; }
     public int? TotalPage { get; set; }
+    public int? TotalData { get; set; }
 
     // Untuk response sukses tanpa pagination
     public static ApiResponse Success(string message = "success", object? data = null)
@@ -34,7 +35,8 @@ namespace be_learn_dotnet.Helpers
       int? from = null,
       int? to = null,
       int? currentPage = null,
-      int? totalPage = null
+      int? totalPage = null,
+      int? totalData = null
     )
     {
       return new ApiResponse
@@ -47,7 +49,8 @@ namespace be_learn_dotnet.Helpers
         From = from,
         To = to,
         CurrentPage = currentPage,
-        TotalPage = totalPage
+        TotalPage = totalPage,
+        TotalData = totalData
       };
     }
 
