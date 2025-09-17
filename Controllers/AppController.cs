@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyBackendApi.Controllers
+namespace be_learn_dotnet.Controllers
 {
   [ApiController]
   [Route("/")] // route root (GET /)
