@@ -1,7 +1,20 @@
+using System.Data;
+using be_learn_dotnet.Config;
+using be_learn_dotnet.Repositories;
 using be_learn_dotnet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<DatabaseConfig>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
+
+// supaya bisa inject IDbConnection langsung
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+  var config = sp.GetRequiredService<DatabaseConfig>();
+  return config.CreateConnection();
+});
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
