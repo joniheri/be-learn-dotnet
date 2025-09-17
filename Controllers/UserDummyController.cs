@@ -34,7 +34,8 @@ namespace be_learn_dotnet.Controllers
         from: from,
         to: to,
         currentPage: currentPage,
-        totalPage: totalPage
+        totalPage: totalPage,
+        totalData: totalData
       );
 
       return Ok(response);
